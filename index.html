@@ -1,944 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brivent — The Infrastructure of Ambition</title>
-<link rel="icon" type="image/png" href="favicon.jpg">
-<link rel="apple-touch-icon" href="favicon.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-:root{
-  --deep:#03032d;--persian:#152bf9;--flamingo:#ff110b;
-  --chalk:#d7d7ff;--white-c:#efeeff;
-  --glass:rgba(21,43,249,.07);--gb:rgba(215,215,255,.10);
-  --fd:'Clash Display',sans-serif;--fb:'Bricolage Grotesque',sans-serif;
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{font-family:var(--fb);background:var(--deep);color:var(--white-c);overflow-x:hidden;cursor:none;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brivent — The Infrastructure of Ambition</title>
+  <meta name="description" content="Brivent creates products, platforms, and ecosystems where ambitious builders thrive. From Lagos to the world.">
+  <link rel="icon" href="favicon.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="brivent.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* ── HERO ── */
+    .hero {
+      height: 100svh; min-height: 700px;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      z-index: 1;
+    }
+    .hero__canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+    .hero__content {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; padding-top: 100px;
+      position: relative; z-index: 2;
+      max-width: 880px;
+    }
+    .hero__badge { margin-bottom: 32px; animation: h-in .8s var(--ease) .1s both; }
+    .hero__title {
+      font-size: clamp(3rem, 8vw, 9.5rem);
+      font-weight: 700; letter-spacing: -.05em; line-height: .98;
+      margin-bottom: 32px;
+    }
+    .hero__title .line { display: block; overflow: hidden; }
+    .hero__title .line span { display: block; animation: line-in .85s cubic-bezier(.22,1,.36,1) both; }
+    .hero__title .line:nth-child(1) span { animation-delay: .15s; }
+    .hero__title .line:nth-child(2) span { animation-delay: .28s; }
+    @keyframes line-in { from{transform:translateY(108%);opacity:0} to{transform:translateY(0);opacity:1} }
+    .hero__sub { max-width: 520px; margin-bottom: 44px; animation: h-in .85s var(--ease) .48s both; }
+    .hero__ctas { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; animation: h-in .85s var(--ease) .6s both; }
+    @keyframes h-in { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
 
-/* ── CURSOR ── */
-#cur,#curR{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
-#cur{width:8px;height:8px;background:var(--persian);mix-blend-mode:screen;transition:width .15s,height .15s,background .15s;}
-#curR{width:34px;height:34px;border:1.5px solid rgba(21,43,249,.5);z-index:9998;transition:width .28s cubic-bezier(.4,0,.2,1),height .28s cubic-bezier(.4,0,.2,1),border-color .28s;}
-body.hovering #cur{width:20px;height:20px;background:var(--flamingo);}
-body.hovering #curR{width:52px;height:52px;border-color:rgba(255,17,11,.35);}
-
-/* ── NOISE OVERLAY ── */
-.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;}
-
-/* ── CANVAS ── */
-#pc{position:fixed;inset:0;pointer-events:none;z-index:0;}
-
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:28px 72px;display:flex;align-items:center;justify-content:space-between;transition:all .4s cubic-bezier(.4,0,.2,1);}
-nav.scrolled{background:rgba(3,3,45,.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);padding:16px 72px;border-bottom:1px solid rgba(215,215,255,.07);}
-.n-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.n-logo img{height:50px;width:auto;max-width:200px;object-fit:contain;display:block;transition:filter .25s,transform .25s;}
-.n-logo:hover img{filter:brightness(1.08);transform:scale(1.02);}
-.n-links{display:flex;align-items:center;gap:40px;list-style:none;}
-.n-links a{text-decoration:none;color:rgba(239,238,255,.55);font-size:.86rem;letter-spacing:.02em;transition:color .2s;cursor:none;position:relative;}
-.n-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--persian);transition:width .25s;}
-.n-links a:hover{color:var(--white-c);}
-.n-links a:hover::after{width:100%;}
-.n-cta{padding:10px 24px;background:var(--persian);color:white!important;border-radius:8px;font-weight:500!important;transition:all .22s ease!important;}
-.n-cta::after{display:none!important;}
-.n-cta:hover{background:#2a3fff!important;transform:translateY(-2px)!important;box-shadow:0 10px 28px rgba(21,43,249,.38)!important;}
-
-/* ── HAMBURGER ── */
-.ham{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:5px;background:none;border:none;width:36px;height:36px;}
-.ham span{display:block;width:22px;height:1.5px;background:var(--white-c);border-radius:2px;transition:all .35s cubic-bezier(.4,0,.2,1);transform-origin:center;}
-.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
-.ham.open span:nth-child(2){opacity:0;transform:scaleX(0);}
-.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-
-/* ── MOBILE OVERLAY ── */
-.mob{display:none;position:fixed;inset:0;background:rgba(3,3,45,.98);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);z-index:190;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
-.mob.open{display:flex;}
-.mob a{font-family:var(--fd);font-size:clamp(1.6rem,8vw,2.4rem);font-weight:700;color:var(--white-c);text-decoration:none;cursor:none;transition:color .2s;opacity:0;transform:translateY(20px);}
-.mob.open a{animation:mfade .4s ease forwards;}
-.mob.open a:nth-child(1){animation-delay:.05s}
-.mob.open a:nth-child(2){animation-delay:.10s}
-.mob.open a:nth-child(3){animation-delay:.15s}
-.mob.open a:nth-child(4){animation-delay:.20s}
-.mob.open a:nth-child(5){animation-delay:.25s}
-.mob a:hover{color:var(--persian);}
-.mob-soc{display:flex;gap:12px;margin-top:14px;opacity:0;}
-.mob.open .mob-soc{animation:mfade .4s .32s ease forwards;}
-.mob-soc a{width:44px;height:44px;border:1px solid rgba(215,215,255,.13);border-radius:12px;display:flex;align-items:center;justify-content:center;color:rgba(215,215,255,.55);font-size:.9rem;text-decoration:none;transition:all .22s;}
-.mob-soc a:hover{border-color:rgba(21,43,249,.5);color:white;background:rgba(21,43,249,.12);}
-@keyframes mfade{to{opacity:1;transform:none}}
-
-/* ── HELPERS ── */
-.container{max-width:1180px;margin:0 auto;padding:0 64px;}
-.stag{font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--persian);display:flex;align-items:center;gap:10px;margin-bottom:18px;}
-.stag::before{content:'';width:20px;height:1px;background:var(--persian);}
-.sec-h{font-family:var(--fd);font-size:clamp(2rem,3.2vw,3rem);font-weight:700;line-height:1.1;letter-spacing:-.025em;color:var(--white-c);}
-.sec-h .acc{color:var(--persian);}
-.sec-h .red{color:var(--flamingo);}
-.divider{height:1px;background:linear-gradient(to right,transparent,rgba(215,215,255,.08),transparent);margin:0 64px;}
-
-/* ── REVEAL ANIMATIONS ── */
-.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);}
-.reveal.vis{opacity:1;transform:none;}
-.reveal-l{opacity:0;transform:translateX(-32px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);}
-.reveal-l.vis{opacity:1;transform:none;}
-.reveal-r{opacity:0;transform:translateX(32px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);}
-.reveal-r.vis{opacity:1;transform:none;}
-.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}.d4{transition-delay:.24s}.d5{transition-delay:.30s}.d6{transition-delay:.36s}
-
-/* ── BTNS ── */
-.bp{padding:13px 28px;background:var(--persian);color:white;text-decoration:none;border-radius:9px;font-weight:500;font-size:.9rem;display:inline-flex;align-items:center;gap:8px;transition:all .25s cubic-bezier(.4,0,.2,1);cursor:none;border:none;font-family:var(--fb);}
-.bp:hover{background:#2a3fff;transform:translateY(-3px);box-shadow:0 16px 36px rgba(21,43,249,.4);}
-.bg{padding:13px 28px;background:transparent;color:var(--white-c);text-decoration:none;border-radius:9px;font-weight:400;font-size:.9rem;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(215,215,255,.14);transition:all .25s cubic-bezier(.4,0,.2,1);cursor:none;}
-.bg:hover{border-color:rgba(215,215,255,.28);background:rgba(215,215,255,.04);transform:translateY(-3px);}
-
-/* ── HERO ── */
-.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:130px 72px 80px;z-index:1;overflow:hidden;}
-.hero-bg-img{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1800&q=75') center/cover no-repeat;opacity:.07;z-index:0;pointer-events:none;transform:scale(1.06);animation:slowzoom 18s ease-in-out infinite alternate;}
-@keyframes slowzoom{to{transform:scale(1.0);}}
-.hero-glow{position:absolute;width:700px;height:700px;background:radial-gradient(ellipse,rgba(21,43,249,.18) 0%,transparent 68%);top:-200px;right:-150px;z-index:0;pointer-events:none;animation:gfloat 8s ease-in-out infinite;}
-.hero-glow2{position:absolute;width:500px;height:500px;background:radial-gradient(ellipse,rgba(255,17,11,.1) 0%,transparent 68%);bottom:-100px;left:-100px;z-index:0;pointer-events:none;animation:gfloat 11s ease-in-out infinite reverse;}
-@keyframes gfloat{0%,100%{transform:translate(0,0);}50%{transform:translate(20px,-20px);}}
-.hi{max-width:680px;position:relative;z-index:2;}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border:1px solid rgba(215,215,255,.1);border-radius:100px;font-size:.68rem;color:var(--chalk);letter-spacing:.1em;text-transform:uppercase;margin-bottom:28px;background:rgba(21,43,249,.09);animation:fsup .8s ease forwards;opacity:0;backdrop-filter:blur(8px);}
-.bdot{width:6px;height:6px;background:var(--flamingo);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
-.hero h1{font-family:var(--fd);font-size:clamp(2.8rem,5vw,4.8rem);font-weight:700;line-height:1.04;letter-spacing:-.03em;color:var(--white-c);animation:fsup .8s .1s ease forwards;opacity:0;}
-.hero h1 .line{display:block;overflow:hidden;}
-.hero h1 .line-inner{display:block;animation:lineup .9s cubic-bezier(.22,1,.36,1) forwards;opacity:0;}
-.hero h1 .line-inner:nth-child(1){animation-delay:.05s}
-.hero h1 .line-inner:nth-child(2){animation-delay:.15s}
-.hero h1 .line-inner:nth-child(3){animation-delay:.25s}
-@keyframes lineup{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:none}}
-.hero-sub{margin-top:24px;font-size:.97rem;line-height:1.8;color:rgba(215,215,255,.6);max-width:500px;animation:fsup .8s .3s ease forwards;opacity:0;}
-.ha{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;animation:fsup .8s .42s ease forwards;opacity:0;}
-.hstats{margin-top:66px;display:flex;gap:0;flex-wrap:wrap;animation:fsup .8s .56s ease forwards;opacity:0;}
-.stat{border-left:2px solid rgba(21,43,249,.5);padding:0 40px 0 18px;position:relative;}
-.stat::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:1px;height:28px;background:rgba(215,215,255,.08);}
-.stat:last-child::after{display:none;}
-.stat:last-child{padding-right:0;}
-.stn{font-family:var(--fd);font-size:1.8rem;font-weight:700;line-height:1;color:var(--white-c);}
-.stn em{color:var(--persian);font-style:normal;}
-.stl{font-size:.72rem;color:rgba(215,215,255,.42);margin-top:5px;letter-spacing:.04em;}
-.sh{position:absolute;bottom:36px;left:72px;display:flex;align-items:center;gap:12px;font-size:.68rem;color:rgba(215,215,255,.3);letter-spacing:.12em;text-transform:uppercase;animation:fsup .8s .7s ease forwards;opacity:0;z-index:2;}
-.sl{width:48px;height:1px;background:linear-gradient(to right,var(--persian),transparent);overflow:hidden;position:relative;}
-.sl::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:rgba(255,255,255,.8);animation:ss 2.2s ease-in-out infinite;}
-@keyframes ss{0%{left:-100%}100%{left:100%}}
-@keyframes fsup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-
-/* ── MARQUEE TICKER ── */
-.ticker{overflow:hidden;padding:18px 0;border-top:1px solid rgba(215,215,255,.06);border-bottom:1px solid rgba(215,215,255,.06);position:relative;z-index:1;background:rgba(3,3,45,.4);}
-.ticker-track{display:flex;gap:0;white-space:nowrap;animation:tick 28s linear infinite;}
-.ticker-track:hover{animation-play-state:paused;}
-.ticker-item{display:inline-flex;align-items:center;gap:14px;padding:0 28px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(215,215,255,.35);font-weight:500;}
-.ticker-item .dot{width:4px;height:4px;background:var(--persian);border-radius:50%;}
-@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-/* ── ABOUT ── */
-.ab-sec{padding:130px 0;position:relative;}
-.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:84px;align-items:center;margin-top:56px;}
-.ab-body p{font-size:.94rem;line-height:1.86;color:rgba(215,215,255,.6);margin-bottom:18px;}
-.ab-body p strong{color:var(--white-c);font-weight:500;}
-.vals{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:52px;}
-.val{padding:24px 20px;border:1px solid rgba(215,215,255,.07);border-radius:14px;background:rgba(6,6,40,.5);backdrop-filter:blur(10px);transition:all .35s cubic-bezier(.4,0,.2,1);cursor:none;position:relative;overflow:hidden;}
-.val::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(21,43,249,.08),transparent);opacity:0;transition:opacity .35s;}
-.val:hover{border-color:rgba(21,43,249,.35);transform:translateY(-5px);box-shadow:0 20px 42px rgba(0,0,0,.3);}
-.val:hover::before{opacity:1;}
-.v-ico{width:38px;height:38px;background:rgba(21,43,249,.13);border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:.88rem;color:var(--chalk);transition:background .3s;}
-.val:hover .v-ico{background:rgba(21,43,249,.25);}
-.val h4{font-family:var(--fd);font-size:.88rem;font-weight:600;color:var(--white-c);margin-bottom:5px;}
-.val p{font-size:.78rem;line-height:1.62;color:rgba(215,215,255,.45);}
-/* about visual */
-.ab-visual{position:relative;}
-.ab-visual-wrap{border-radius:24px;overflow:hidden;position:relative;box-shadow:0 30px 60px -15px rgba(0,0,0,.6);}
-.ab-visual-wrap img{width:100%;height:380px;object-fit:cover;display:block;transition:transform .6s ease;}
-.ab-visual-wrap:hover img{transform:scale(1.04);}
-.ab-visual-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(3,3,45,.5),transparent);pointer-events:none;}
-.ab-float-card{position:absolute;bottom:-24px;right:-24px;background:rgba(3,3,45,.9);border:1px solid rgba(21,43,249,.25);border-radius:16px;padding:20px 24px;backdrop-filter:blur(20px);min-width:180px;}
-.ab-float-card .num{font-family:var(--fd);font-size:2rem;font-weight:700;color:var(--persian);}
-.ab-float-card .lbl{font-size:.73rem;color:rgba(215,215,255,.48);margin-top:2px;}
-.ab-float-badge{position:absolute;top:-18px;left:-18px;background:var(--flamingo);border-radius:12px;padding:10px 14px;font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:white;box-shadow:0 8px 22px rgba(255,17,11,.35);}
-
-/* ── SERVICES ── */
-.sv-sec{padding:130px 0;position:relative;overflow:hidden;}
-.sv-bg{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(21,43,249,.04) 50%,transparent 100%);pointer-events:none;}
-.sv-head{margin-bottom:64px;}
-.sv-head-inner{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;}
-.sv-head p{max-width:280px;font-size:.86rem;line-height:1.76;color:rgba(215,215,255,.48);}
-.sv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(215,215,255,.08);border-radius:18px;overflow:hidden;backdrop-filter:blur(6px);}
-.sv-item{padding:44px 32px;background:rgba(6,6,35,.55);border-right:1px solid rgba(215,215,255,.06);transition:background .35s,transform .35s;cursor:none;position:relative;overflow:hidden;}
-.sv-item::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--persian),var(--flamingo));transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.4,0,.2,1);}
-.sv-item:hover::before{transform:scaleX(1);}
-.sv-item:last-child{border-right:none;}
-.sv-item:hover{background:rgba(21,43,249,.09);}
-.sv-n{font-size:.65rem;font-weight:600;letter-spacing:.18em;color:rgba(21,43,249,.5);margin-bottom:22px;font-family:var(--fd);}
-.sv-ico{width:52px;height:52px;border:1px solid rgba(21,43,249,.2);border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;font-size:1.1rem;color:var(--chalk);background:rgba(21,43,249,.07);transition:all .35s;}
-.sv-item:hover .sv-ico{background:rgba(21,43,249,.18);border-color:rgba(21,43,249,.45);transform:scale(1.05);}
-.sv-item h3{font-family:var(--fd);font-size:1.05rem;font-weight:600;color:var(--white-c);margin-bottom:10px;}
-.sv-item p{font-size:.84rem;line-height:1.76;color:rgba(215,215,255,.48);}
-.sv-more{margin-top:24px;display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--persian);opacity:0;transform:translateX(-8px);transition:all .3s;}
-.sv-item:hover .sv-more{opacity:1;transform:none;}
-
-/* ── PRODUCTS ── */
-.pr-sec{padding:130px 0;}
-.pr-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:64px;flex-wrap:wrap;gap:24px;}
-.pr-sub{max-width:300px;font-size:.86rem;line-height:1.78;color:rgba(215,215,255,.46);}
-.pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
-
-/* product card */
-.pc{border:1px solid rgba(215,215,255,.08);border-radius:20px;overflow:hidden;background:rgba(6,6,35,.75);transition:all .45s cubic-bezier(.22,1,.36,1);cursor:none;position:relative;}
-.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--persian),var(--flamingo),var(--persian));background-size:200% 100%;opacity:0;transition:opacity .35s;animation:borderflow 3s linear infinite;}
-.pc:hover{transform:translateY(-10px);border-color:rgba(21,43,249,.28);box-shadow:0 32px 64px rgba(0,0,0,.5);}
-.pc:hover::before{opacity:1;}
-@keyframes borderflow{0%{background-position:0% 0%}100%{background-position:200% 0%}}
-.pc.feat{border-color:rgba(21,43,249,.2);background:linear-gradient(150deg,rgba(21,43,249,.1) 0%,rgba(6,6,35,.95) 50%);}
-.pc-img-wrap{height:180px;overflow:hidden;position:relative;}
-.pc-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease,filter .6s ease;filter:brightness(.7);}
-.pc:hover .pc-img-wrap img{transform:scale(1.06);filter:brightness(.85);}
-.pc-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(6,6,35,.95));pointer-events:none;}
-.pc-logo-wrap{position:absolute;bottom:16px;left:20px;display:flex;align-items:center;gap:12px;}
-.pli{width:44px;height:44px;border-radius:11px;object-fit:cover;border:2px solid rgba(215,215,255,.15);background:rgba(6,6,35,.8);}
-.pb2{padding:4px 12px;border-radius:100px;font-size:.65rem;font-weight:600;letter-spacing:.06em;}
-.live{background:rgba(21,249,94,.1);color:#5efc96;border:1px solid rgba(21,249,94,.25);}
-.build{background:rgba(255,17,11,.09);color:#ff8b87;border:1px solid rgba(255,17,11,.22);}
-.beta{background:rgba(139,92,246,.12);color:#c4b5fd;border:1px solid rgba(139,92,246,.27);}
-.pb{padding:22px 24px 26px;}
-.pb h3{font-family:var(--fd);font-size:1.12rem;font-weight:600;color:var(--white-c);margin-bottom:9px;}
-.pb p{font-size:.84rem;line-height:1.76;color:rgba(215,215,255,.52);margin-bottom:20px;}
-.ptgs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;}
-.ptg{padding:3px 11px;background:rgba(215,215,255,.04);border:1px solid rgba(215,215,255,.09);border-radius:100px;font-size:.68rem;color:rgba(215,215,255,.45);}
-.plk{display:inline-flex;align-items:center;gap:6px;font-size:.83rem;color:var(--persian);font-weight:500;text-decoration:none;transition:gap .2s,color .2s;cursor:none;background:none;border:none;font-family:var(--fb);padding:0;}
-.plk:hover{gap:11px;color:#4a5fff;}
-
-/* ── PRODUCT MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(3,3,26,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .35s cubic-bezier(.4,0,.2,1);}
-.modal-overlay.open{opacity:1;pointer-events:all;}
-.modal{background:rgba(6,6,38,.98);border:1px solid rgba(215,215,255,.1);border-radius:24px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;position:relative;transform:scale(.94) translateY(16px);transition:transform .4s cubic-bezier(.22,1,.36,1);scrollbar-width:thin;scrollbar-color:rgba(21,43,249,.3) transparent;}
-.modal-overlay.open .modal{transform:scale(1) translateY(0);}
-.modal::-webkit-scrollbar{width:4px;}
-.modal::-webkit-scrollbar-thumb{background:rgba(21,43,249,.3);border-radius:2px;}
-.modal-close{position:sticky;top:16px;float:right;margin:16px 16px 0 0;width:36px;height:36px;background:rgba(215,215,255,.07);border:1px solid rgba(215,215,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:none;color:rgba(215,215,255,.7);font-size:.85rem;transition:all .22s;z-index:10;}
-.modal-close:hover{background:rgba(255,17,11,.15);border-color:rgba(255,17,11,.3);color:white;}
-.modal-hero{height:220px;overflow:hidden;position:relative;border-radius:20px 20px 0 0;margin-bottom:0;}
-.modal-hero img{width:100%;height:100%;object-fit:cover;filter:brightness(.65);}
-.modal-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(6,6,38,.95));}
-.modal-hero-content{position:absolute;bottom:24px;left:28px;right:28px;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;}
-.modal-hero-title{font-family:var(--fd);font-size:1.5rem;font-weight:700;color:var(--white-c);}
-.modal-body{padding:32px 36px 40px;}
-.modal-tag{display:inline-flex;align-items:center;gap:7px;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--persian);margin-bottom:20px;}
-.modal-tag::before{content:'';width:16px;height:1px;background:var(--persian);}
-.modal-section{margin-bottom:28px;}
-.modal-section h4{font-family:var(--fd);font-size:.88rem;font-weight:600;color:var(--chalk);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.modal-section h4 i{font-size:.8rem;color:var(--persian);}
-.modal-section p{font-size:.88rem;line-height:1.82;color:rgba(215,215,255,.58);}
-.modal-features{list-style:none;display:flex;flex-direction:column;gap:9px;}
-.modal-features li{display:flex;align-items:flex-start;gap:10px;font-size:.86rem;color:rgba(215,215,255,.62);line-height:1.55;}
-.modal-features li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--persian);margin-top:6px;flex-shrink:0;}
-.modal-who{padding:16px 20px;background:rgba(21,43,249,.07);border:1px solid rgba(21,43,249,.16);border-radius:12px;font-size:.86rem;color:rgba(215,215,255,.62);line-height:1.68;}
-.modal-value{padding:20px 22px;background:linear-gradient(135deg,rgba(21,43,249,.12),rgba(255,17,11,.05));border:1px solid rgba(21,43,249,.2);border-radius:14px;}
-.modal-value p{font-size:.95rem;font-weight:500;color:var(--white-c);line-height:1.56;}
-.modal-cta{margin-top:6px;display:flex;gap:12px;flex-wrap:wrap;}
-
-/* ── NUMBERS / PARALLAX ── */
-.nums-sec{padding:90px 0;position:relative;overflow:hidden;}
-.nums-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(21,43,249,.07) 0%,rgba(255,17,11,.03) 100%);pointer-events:none;}
-.nums-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
-.num-item{text-align:center;padding:44px 24px;border-right:1px solid rgba(215,215,255,.07);position:relative;}
-.num-item:last-child{border-right:none;}
-.num-val{font-family:var(--fd);font-size:clamp(2.4rem,4vw,3.6rem);font-weight:700;color:var(--white-c);line-height:1;}
-.num-val .ac{color:var(--persian);}
-.num-lbl{font-size:.76rem;color:rgba(215,215,255,.4);margin-top:8px;letter-spacing:.06em;}
-
-/* ── VISION ── */
-.vi-sec{padding:130px 0;border-top:1px solid rgba(215,215,255,.06);border-bottom:1px solid rgba(215,215,255,.06);position:relative;overflow:hidden;}
-.vi-ambient{position:absolute;right:-200px;top:-200px;width:700px;height:700px;background:radial-gradient(ellipse,rgba(21,43,249,.1) 0%,transparent 68%);pointer-events:none;}
-.vi-grid{display:grid;grid-template-columns:1fr 1fr;gap:84px;align-items:center;}
-.vi-l h2{font-family:var(--fd);font-size:clamp(1.9rem,3vw,2.8rem);font-weight:700;line-height:1.12;letter-spacing:-.02em;color:var(--white-c);margin-bottom:22px;}
-.vi-l h2 span{color:var(--persian);}
-.vi-l p{font-size:.94rem;line-height:1.82;color:rgba(215,215,255,.56);}
-.mis{display:flex;flex-direction:column;gap:14px;}
-.mi{padding:24px;border:1px solid rgba(215,215,255,.07);border-radius:14px;background:rgba(6,6,35,.45);display:flex;gap:18px;align-items:flex-start;transition:all .35s cubic-bezier(.4,0,.2,1);cursor:none;position:relative;overflow:hidden;}
-.mi::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--persian),var(--flamingo));transform:scaleY(0);transform-origin:top;transition:transform .35s cubic-bezier(.4,0,.2,1);}
-.mi:hover::after{transform:scaleY(1);}
-.mi:hover{border-color:rgba(21,43,249,.25);background:rgba(21,43,249,.07);transform:translateX(5px);}
-.mi-ico{width:44px;height:44px;min-width:44px;background:rgba(21,43,249,.12);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--chalk);transition:background .3s;}
-.mi:hover .mi-ico{background:rgba(21,43,249,.22);}
-.mi-b h4{font-family:var(--fd);font-size:.9rem;font-weight:600;color:var(--white-c);margin-bottom:5px;}
-.mi-b p{font-size:.81rem;line-height:1.62;color:rgba(215,215,255,.46);}
-
-/* ── CONTACT ── */
-.ct-sec{padding:130px 0;}
-.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:76px;align-items:start;margin-top:56px;}
-.ct-l h3{font-family:var(--fd);font-size:1.45rem;font-weight:600;color:var(--white-c);margin-bottom:14px;}
-.ct-l>p{font-size:.92rem;line-height:1.8;color:rgba(215,215,255,.52);margin-bottom:38px;}
-.ci{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
-.ci-i{width:42px;height:42px;background:rgba(21,43,249,.12);border:1px solid rgba(21,43,249,.22);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.88rem;color:var(--chalk);flex-shrink:0;transition:all .25s;}
-.ci:hover .ci-i{background:rgba(21,43,249,.22);transform:scale(1.05);}
-.ci-t span{display:block;font-size:.67rem;color:rgba(215,215,255,.32);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px;}
-.ci-t a,.ci-t p{font-size:.9rem;color:var(--white-c);text-decoration:none;transition:color .2s;}
-.ci-t a:hover{color:var(--persian);}
-.rb{margin-top:34px;padding:22px;border:1px solid rgba(215,215,255,.07);border-radius:14px;background:rgba(21,43,249,.05);}
-.rb p{font-size:.82rem;color:rgba(215,215,255,.56);line-height:1.72;}
-.rb strong{color:var(--white-c);display:block;margin-bottom:5px;font-weight:500;}
-.cf{padding:40px;border:1px solid rgba(215,215,255,.09);border-radius:20px;background:rgba(6,6,35,.8);backdrop-filter:blur(16px);}
-.cf h4{font-family:var(--fd);font-weight:600;font-size:1.05rem;color:var(--white-c);margin-bottom:26px;}
-.fg{margin-bottom:16px;}
-.fg label{display:block;font-size:.72rem;font-weight:500;color:rgba(215,215,255,.48);margin-bottom:7px;letter-spacing:.05em;text-transform:uppercase;}
-.fg input,.fg textarea,.fg select{width:100%;padding:13px 16px;background:rgba(215,215,255,.03);border:1px solid rgba(215,215,255,.09);border-radius:10px;color:var(--white-c);font-family:var(--fb);font-size:.88rem;outline:none;transition:all .25s;-webkit-appearance:none;appearance:none;}
-.fg select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23d7d7ff' stroke-opacity='.4' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;}
-.fg select option{background:rgb(8,8,50);}
-.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:rgba(21,43,249,.5);background:rgba(21,43,249,.05);box-shadow:0 0 0 3px rgba(21,43,249,.1);}
-.fg textarea{resize:vertical;min-height:112px;}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
-.sb{width:100%;padding:14px;background:var(--persian);color:white;border:none;border-radius:10px;font-family:var(--fd);font-size:.9rem;font-weight:600;cursor:none;transition:all .25s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;gap:9px;margin-top:6px;}
-.sb:hover:not(:disabled){background:#2a3fff;transform:translateY(-2px);box-shadow:0 14px 34px rgba(21,43,249,.42);}
-.sb:disabled{opacity:.65;cursor:not-allowed;transform:none;}
-
-/* ── FOOTER ── */
-footer{padding:64px 0 36px;border-top:1px solid rgba(215,215,255,.06);position:relative;z-index:1;}
-.ft{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:48px;margin-bottom:52px;}
-.fb>p{font-size:.83rem;line-height:1.76;color:rgba(215,215,255,.38);margin-top:14px;max-width:250px;}
-.fc h5{font-family:var(--fd);font-size:.67rem;font-weight:600;color:rgba(215,215,255,.3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:18px;}
-.fc ul{list-style:none;}
-.fc li{margin-bottom:10px;}
-.fc li a{text-decoration:none;font-size:.84rem;color:rgba(215,215,255,.46);transition:color .2s,transform .2s;cursor:none;display:inline-block;}
-.fc li a:hover{color:var(--white-c);transform:translateX(3px);}
-.ftb{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid rgba(215,215,255,.05);flex-wrap:wrap;gap:14px;}
-.ftb p{font-size:.76rem;color:rgba(215,215,255,.24);}
-.ftb p span{color:var(--flamingo);}
-.soc{display:flex;gap:8px;}
-.soc a{width:34px;height:34px;border:1px solid rgba(215,215,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:rgba(215,215,255,.42);text-decoration:none;transition:all .22s;cursor:none;}
-.soc a:hover{border-color:rgba(21,43,249,.4);background:rgba(21,43,249,.12);color:var(--white-c);transform:translateY(-3px);}
-
-/* ── RESPONSIVE ── */
-@media(max-width:1024px){
-  nav,nav.scrolled{padding-left:36px;padding-right:36px;}
-  .hero{padding:120px 36px 80px;}
-  .container{padding:0 36px;}
-  .divider{margin:0 36px;}
-  .ab-grid,.vi-grid{grid-template-columns:1fr;gap:52px;}
-  .ab-visual-wrap{height:300px;}
-  .ab-float-card{bottom:-16px;right:-8px;}
-  .ft{grid-template-columns:1fr 1fr;gap:36px;}
-  .nums-grid{grid-template-columns:repeat(2,1fr);}
-  .num-item:nth-child(2){border-right:none;}
-  .num-item:nth-child(3){border-right:1px solid rgba(215,215,255,.07);}
-  .num-item:nth-child(3),.num-item:nth-child(4){border-top:1px solid rgba(215,215,255,.07);}
-}
-@media(max-width:768px){
-  nav{padding:16px 20px;}
-  nav.scrolled{padding:13px 20px;}
-  .n-links{display:none;}
-  .ham{display:flex;}
-  .hero{padding:100px 20px 72px;}
-  .sh{left:20px;}
-  .container{padding:0 20px;}
-  .divider{margin:0 20px;}
-  .ab-sec,.sv-sec,.pr-sec,.ct-sec,.vi-sec{padding:90px 0;}
-  .vals{grid-template-columns:1fr 1fr;}
-  .sv-grid{grid-template-columns:1fr;border-radius:16px;}
-  .sv-item{border-right:none;border-bottom:1px solid rgba(215,215,255,.06);}
-  .sv-item:last-child{border-bottom:none;}
-  .pr-grid{grid-template-columns:1fr;}
-  .ct-grid{grid-template-columns:1fr;gap:48px;}
-  .ft{grid-template-columns:1fr;gap:28px;}
-  .nums-grid{grid-template-columns:repeat(2,1fr);}
-  .hstats{gap:0;}
-  .stat{padding:0 24px 0 16px;}
-  .modal-body{padding:24px 22px 32px;}
-  .modal-hero{height:180px;}
-  .cf{padding:26px 20px;}
-  .frow{grid-template-columns:1fr;}
-  .ab-float-card,.ab-float-badge{display:none;}
-  .pr-head{flex-direction:column;align-items:flex-start;}
-  .sv-head-inner{flex-direction:column;align-items:flex-start;}
-  .vi-grid{grid-template-columns:1fr;gap:52px;}
-}
-@media(max-width:480px){
-  .hero h1{font-size:2.4rem;}
-  .vals{grid-template-columns:1fr;}
-  .stn{font-size:1.5rem;}
-  .badge{font-size:.62rem;}
-  .nums-grid{grid-template-columns:1fr 1fr;}
-  .modal{border-radius:18px;}
-}
-</style>
+    /* Stats bar */
+    .hero__statsbar {
+      position: relative; z-index: 2;
+      border-top: 1px solid var(--glass-border);
+      background: rgba(3,3,45,.6); backdrop-filter: blur(28px) saturate(1.5);
+      padding: 26px 0;
+      animation: h-in .85s var(--ease) .75s both;
+    }
+    .h-stats { display: flex; align-items: stretch; }
+    .h-stat { flex: 1; text-align: center; padding: 4px 16px; position: relative; }
+    .h-stat+.h-stat::before {
+      content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+      width:1px; height:36px; background: var(--glass-border);
+    }
+    .h-stat-val {
+      font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2.8rem);
+      font-weight: 700; letter-spacing: -.04em; line-height: 1;
+      display: block; color: var(--white-c); margin-bottom: 5px;
+    }
+    .h-stat-lbl { font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--white-40); font-weight: 700; display: block; }
+    /* Scroll indicator */
+    .hero__scroll {
+      position: absolute; bottom: 120px; left: var(--pad);
+      z-index: 2; animation: h-in 1s .9s both;
+    }
+    /* About section */
+    .abt-split { display:grid; grid-template-columns:1fr 1fr; gap:clamp(40px,8vw,100px); align-items:center; }
+    .abt-img { position:relative; border-radius:var(--r-xl); overflow:hidden; aspect-ratio:4/3.2; }
+    .abt-img img { width:100%;height:100%;object-fit:cover;filter:brightness(.68) saturate(.72); }
+    .abt-img::before { content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(21,43,249,.22),rgba(3,3,45,.5));z-index:1; }
+    .abt-img::after { content:'';position:absolute;inset:0;border:1px solid var(--glass-border);border-radius:inherit;z-index:3;pointer-events:none; }
+    .abt-chip {
+      position:absolute;bottom:22px;left:22px;z-index:4;
+      background:rgba(3,3,45,.88);backdrop-filter:blur(16px);
+      border:1px solid var(--glass-border);border-radius:var(--r-md);padding:14px 18px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .abt-chip p { font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--white-40);font-weight:700;margin-bottom:3px; }
+    .abt-chip span { font-family:var(--font-display);font-size:1.25rem;font-weight:700;letter-spacing:-.02em; }
+    .abt-pin {
+      position:absolute;top:22px;right:22px;z-index:4;
+      background:rgba(21,43,249,.14);border:1px solid rgba(21,43,249,.3);border-radius:var(--r-pill);
+      padding:7px 13px;backdrop-filter:blur(12px);
+      font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--persian);
+    }
+    /* Services strip */
+    .svc-strip { display:grid;grid-template-columns:repeat(3,1fr); border:1px solid var(--glass-border); border-radius:var(--r-xl); overflow:hidden; }
+    .svc-tile {
+      padding:clamp(28px,4vw,44px) clamp(22px,3vw,34px);
+      background:linear-gradient(145deg,rgba(255,255,255,.05) 0%,rgba(21,43,249,.03) 100%);
+      position:relative; overflow:hidden;
+      transition:background var(--t-med); cursor:default;
+    }
+    .svc-tile+.svc-tile { border-left:1px solid var(--glass-border); }
+    .svc-tile:hover { background:rgba(21,43,249,.07); }
+    .svc-tile__n { font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--persian);margin-bottom:18px;display:block; }
+    .svc-tile h3 { font-size:clamp(1.05rem,1.8vw,1.45rem);margin-bottom:12px; }
+    .svc-tile p  { font-size:.83rem;color:var(--white-60);line-height:1.7; }
+    .svc-arr {
+      display:inline-flex;align-items:center;justify-content:center;
+      width:32px;height:32px;border-radius:50%;border:1px solid var(--glass-border);
+      color:var(--white-40);font-size:.72rem;margin-top:22px;
+      transition:all var(--t-med) var(--ease);
+    }
+    .svc-tile:hover .svc-arr { border-color:var(--persian);color:var(--persian);transform:rotate(-45deg);box-shadow:0 0 12px rgba(21,43,249,.4); }
+    /* Products */
+    .prod-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:20px; }
+    /* Numbers */
+    .nums-row { display:grid;grid-template-columns:repeat(4,1fr);gap:16px; }
+    /* CTA box */
+    .cta-box {
+      text-align:center; padding:clamp(60px,9vw,110px) clamp(20px,5vw,60px);
+      border-radius:var(--r-2xl);
+      background:linear-gradient(145deg,rgba(255,255,255,.05) 0%,rgba(21,43,249,.04) 100%);
+      border:1px solid var(--glass-border); position:relative; overflow:hidden;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 40px rgba(0,0,0,.3);
+    }
+    .cta-box::before {
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse 90% 70% at 50% 110%,rgba(21,43,249,.14),transparent);z-index:0;
+    }
+    .cta-box>*{position:relative;z-index:1;}
+    .cta-btns{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:36px;}
+    @media(max-width:1024px){
+      .abt-split{grid-template-columns:1fr}
+      .svc-strip{grid-template-columns:1fr;border-radius:var(--r-lg)}
+      .svc-tile+.svc-tile{border-left:none;border-top:1px solid var(--glass-border)}
+      .prod-grid{grid-template-columns:1fr}
+      .nums-row{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:768px){
+      .h-stats{flex-wrap:wrap;gap:16px}
+      .h-stat{flex:1 0 40%}
+      .h-stat+.h-stat::before{display:none}
+      .hero__scroll{display:none}
+    }
+    @media(max-width:480px){ .nums-row{grid-template-columns:1fr} }
+  </style>
 </head>
 <body>
 
-<div id="cur"></div>
-<div id="curR"></div>
-<div class="noise"></div>
-<canvas id="pc"></canvas>
-
-<!-- MOBILE NAV -->
-<div class="mob" id="mob">
-  <a href="#home" onclick="closeMob()">Home</a>
-  <a href="#about" onclick="closeMob()">About</a>
-  <a href="#services" onclick="closeMob()">What We Do</a>
-  <a href="#products" onclick="closeMob()">Products</a>
-  <a href="#contact" onclick="closeMob()">Contact</a>
-  <div class="mob-soc">
-    <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-  </div>
+<div class="cur-dot" id="curDot"></div>
+<div class="cur-ring" id="curRing"></div>
+<div class="loader" id="loader">
+  <div class="loader__logo"><img src="brivent.png" alt="Brivent"></div>
+  <div class="loader__bar"></div>
 </div>
 
 <!-- NAV -->
-<nav id="nav">
-  <a href="#home" class="n-logo">
-    <img src="brivent.png" alt="Brivent" style="height:50px;width:auto;max-width:200px;">
-  </a>
-  <ul class="n-links">
-    <li><a href="#home">Home</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#services">What We Do</a></li>
-    <li><a href="#products">Products</a></li>
-    <li><a href="#contact" class="n-cta">Get in Touch</a></li>
-  </ul>
-  <button class="ham" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
+<nav class="nav" id="nav">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo"><img src="brivent.png" alt="Brivent"></a>
+      <ul class="nav__links">
+        <li><a href="index.html"    class="nav__link">Home</a></li>
+        <li><a href="about.html"    class="nav__link">About</a></li>
+        <li><a href="services.html" class="nav__link">Services</a></li>
+        <li><a href="products.html" class="nav__link">Products</a></li>
+        <li><a href="contact.html"  class="nav__link">Contact</a></li>
+      </ul>
+      <div class="nav__actions">
+        <a href="contact.html" class="btn btn-primary btn-sm" data-mag>Get in Touch <i class="fa-solid fa-arrow-right"></i></a>
+        <button class="nav__burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-bg-img"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-glow2"></div>
-  <div class="hi">
-    <div class="badge"><span class="bdot"></span>Building the Future of Ambition</div>
-    <h1>
-      <span class="line"><span class="line-inner">The <span style="color:var(--persian)">Ecosystem</span></span></span>
-      <span class="line"><span class="line-inner">Behind Your</span></span>
-      <span class="line"><span class="line-inner"><span style="color:var(--flamingo)">Next</span> Big Idea.</span></span>
-    </h1>
-    <p class="hero-sub">Brivent is a parent company building products, platforms, and early-stage ventures — giving structure to ambition and bridging the gap between potential and execution.</p>
-    <div class="ha">
-      <a href="#products" class="bp">Explore Our Work <i class="fa-solid fa-arrow-right fa-sm"></i></a>
-      <a href="#about" class="bg">Learn About Us <i class="fa-solid fa-chevron-right fa-xs"></i></a>
+<div class="m-menu" id="mMenu">
+  <ul class="m-menu__links">
+    <li><a href="index.html"    class="m-menu__link">Home</a></li>
+    <li><a href="about.html"    class="m-menu__link">About</a></li>
+    <li><a href="services.html" class="m-menu__link">Services</a></li>
+    <li><a href="products.html" class="m-menu__link">Products</a></li>
+    <li><a href="contact.html"  class="m-menu__link">Contact</a></li>
+  </ul>
+  <p class="m-menu__foot">&copy; 2024 Brivent &mdash; Lagos, Nigeria</p>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <!-- 3D PHYSICS CANVAS: icosahedron + orbital rings + deep space particles -->
+  <canvas id="scene3d" class="hero__canvas" aria-hidden="true"></canvas>
+  <div class="grid-ovr" aria-hidden="true"></div>
+
+  <div class="container hero__content">
+    <div class="hero__badge">
+      <span class="badge"><span class="bdot"></span> Building From Lagos to the World</span>
     </div>
-    <div class="hstats">
-      <div class="stat"><div class="stn">3<em>+</em></div><div class="stl">Active Products</div></div>
-      <div class="stat"><div class="stn" style="color:var(--flamingo)">∞</div><div class="stl">Ideas We Support</div></div>
-      <div class="stat"><div class="stn">1<em>.</em></div><div class="stl">Clear Mission</div></div>
+    <h1 class="hero__title">
+      <span class="line"><span>The Infrastructure</span></span>
+      <span class="line"><span>of <span class="neon-blue" style="-webkit-text-fill-color:var(--persian)">Ambition.</span></span></span>
+    </h1>
+    <p class="body-lg hero__sub">
+      Brivent creates products, platforms, and ecosystems where ambitious builders thrive. We give structure to the ideas that shape tomorrow.
+    </p>
+    <div class="hero__ctas">
+      <a href="products.html" class="btn btn-primary btn-lg" data-mag>Explore Products <i class="fa-solid fa-arrow-right"></i></a>
+      <a href="about.html"    class="btn btn-glass btn-lg"   data-mag>Our Story <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
     </div>
   </div>
-  <div class="sh"><div class="sl"></div>Scroll to explore</div>
+
+  <div class="hero__scroll">
+    <div class="scroll-ind"><span>Scroll</span><i class="fa-solid fa-arrow-down"></i></div>
+  </div>
+
+  <div class="hero__statsbar">
+    <div class="container">
+      <div class="h-stats">
+        <div class="h-stat">
+          <span class="h-stat-val" data-count="3" data-suffix="+">3+</span>
+          <span class="h-stat-lbl">Active Products</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-val">&infin;</span>
+          <span class="h-stat-lbl">Ideas Fueled</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-val" data-count="100" data-suffix="%">100%</span>
+          <span class="h-stat-lbl">Commitment</span>
+        </div>
+        <div class="h-stat">
+          <span class="h-stat-val">2024</span>
+          <span class="h-stat-lbl">Est. Lagos, NG</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- TICKER -->
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track" id="tickerTrack">
-    <span class="ticker-item"><span class="dot"></span>Product Development</span>
-    <span class="ticker-item"><span class="dot"></span>Community Building</span>
-    <span class="ticker-item"><span class="dot"></span>WhatsApp Automation</span>
-    <span class="ticker-item"><span class="dot"></span>Startup Ecosystem</span>
-    <span class="ticker-item"><span class="dot"></span>Tech Community</span>
-    <span class="ticker-item"><span class="dot"></span>Brivent · Lagos</span>
-    <span class="ticker-item"><span class="dot"></span>Infrastructure of Ambition</span>
-    <span class="ticker-item"><span class="dot"></span>Building What Matters</span>
-    <span class="ticker-item"><span class="dot"></span>Product Development</span>
-    <span class="ticker-item"><span class="dot"></span>Community Building</span>
-    <span class="ticker-item"><span class="dot"></span>WhatsApp Automation</span>
-    <span class="ticker-item"><span class="dot"></span>Startup Ecosystem</span>
-    <span class="ticker-item"><span class="dot"></span>Tech Community</span>
-    <span class="ticker-item"><span class="dot"></span>Brivent · Lagos</span>
-    <span class="ticker-item"><span class="dot"></span>Infrastructure of Ambition</span>
-    <span class="ticker-item"><span class="dot"></span>Building What Matters</span>
+<!-- ═══ MARQUEE ═══ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <div class="marquee__item"><i class="fa-solid fa-circle"></i> Product Development <i class="fa-solid fa-circle"></i> Community Building <i class="fa-solid fa-circle"></i> WhatsApp Automation <i class="fa-solid fa-circle"></i> Startup Support <i class="fa-solid fa-circle"></i> Tech Education <i class="fa-solid fa-circle"></i> SaaS Platforms <i class="fa-solid fa-circle"></i> Ecosystem Design <i class="fa-solid fa-circle"></i> African Innovation <i class="fa-solid fa-circle"></i> Scalable Systems</div>
+    <div class="marquee__item"><i class="fa-solid fa-circle"></i> Product Development <i class="fa-solid fa-circle"></i> Community Building <i class="fa-solid fa-circle"></i> WhatsApp Automation <i class="fa-solid fa-circle"></i> Startup Support <i class="fa-solid fa-circle"></i> Tech Education <i class="fa-solid fa-circle"></i> SaaS Platforms <i class="fa-solid fa-circle"></i> Ecosystem Design <i class="fa-solid fa-circle"></i> African Innovation <i class="fa-solid fa-circle"></i> Scalable Systems</div>
   </div>
 </div>
-<div class="divider"></div>
 
-<!-- ABOUT -->
-<section class="ab-sec" id="about">
+<!-- ═══ ABOUT TEASER ═══ -->
+<section class="sec">
   <div class="container">
-    <div class="stag reveal">About Brivent</div>
-    <div class="ab-grid">
-      <div class="ab-body reveal-l">
-        <h2 class="sec-h" style="margin-bottom:28px">Structure for<br><span class="acc">Ambition.</span></h2>
-        <p>Brivent was created from observing <strong>talented people, communities, and ideas</strong> struggle — not because they lacked ability, but because they lacked direction and support.</p>
-        <p>We are a parent company that <strong>builds products, nurtures platforms,</strong> and supports early-stage ventures — the scaffolding that holds big ideas upright while they grow.</p>
-        <p>From SaaS tools to community platforms and tech ecosystems, Brivent operates at the intersection of vision and execution.</p>
-        <a href="#contact" class="bp" style="margin-top:30px">Work With Us <i class="fa-solid fa-arrow-right fa-sm"></i></a>
-      </div>
-      <div class="ab-visual reveal-r d2">
-        <div class="ab-visual-wrap">
-          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&q=82" alt="Team collaboration">
-          <div class="ab-img-overlay" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(3,3,45,.55),transparent);pointer-events:none;"></div>
-        </div>
-        <div class="ab-float-card">
-          <div class="num">Lagos</div>
-          <div class="lbl">Based in Nigeria · Remote Worldwide</div>
-        </div>
-        <div class="ab-float-badge">Est. 2024</div>
-      </div>
-    </div>
-    <div class="vals">
-      <div class="val reveal d1"><div class="v-ico"><i class="fa-solid fa-bullseye"></i></div><h4>Clarity</h4><p>Every idea and builder gets clear direction and focused execution.</p></div>
-      <div class="val reveal d2"><div class="v-ico"><i class="fa-solid fa-bolt"></i></div><h4>Integrity</h4><p>Intentional work and uncompromisingly high standards.</p></div>
-      <div class="val reveal d3"><div class="v-ico"><i class="fa-solid fa-shield-halved"></i></div><h4>Trust</h4><p>We protect and champion our commitments at every step.</p></div>
-      <div class="val reveal d4"><div class="v-ico"><i class="fa-solid fa-arrow-trend-up"></i></div><h4>Growth</h4><p>Forward momentum embedded in every product we build.</p></div>
-    </div>
-  </div>
-</section>
-<div class="divider"></div>
-
-<!-- SERVICES -->
-<section class="sv-sec" id="services">
-  <div class="sv-bg"></div>
-  <div class="container">
-    <div class="sv-head">
-      <div class="sv-head-inner">
-        <div>
-          <div class="stag reveal">What We Do</div>
-          <h2 class="sec-h reveal">Building <span class="acc">Systems</span><br>That Scale.</h2>
-        </div>
-        <p class="reveal d2">Three pillars driving how Brivent creates value for builders, founders, and communities.</p>
-      </div>
-    </div>
-    <div class="sv-grid reveal">
-      <div class="sv-item">
-        <div class="sv-n">01</div>
-        <div class="sv-ico"><i class="fa-solid fa-layer-group"></i></div>
-        <h3>Product Development</h3>
-        <p>We conceive, design, and build digital products with relentless focus on usability and market fit — from idea to live product.</p>
-        <span class="sv-more">Learn More <i class="fa-solid fa-arrow-right fa-xs"></i></span>
-      </div>
-      <div class="sv-item">
-        <div class="sv-n">02</div>
-        <div class="sv-ico"><i class="fa-solid fa-people-group"></i></div>
-        <h3>Community Building</h3>
-        <p>We build ecosystems where builders, founders, and students connect, collaborate, and compound their collective growth.</p>
-        <span class="sv-more">Learn More <i class="fa-solid fa-arrow-right fa-xs"></i></span>
-      </div>
-      <div class="sv-item">
-        <div class="sv-n">03</div>
-        <div class="sv-ico"><i class="fa-solid fa-lightbulb"></i></div>
-        <h3>Startup Support</h3>
-        <p>A parenting ecosystem for early-stage ideas — providing the clarity, direction, and infrastructure to go from zero to one.</p>
-        <span class="sv-more">Learn More <i class="fa-solid fa-arrow-right fa-xs"></i></span>
-      </div>
-    </div>
-  </div>
-</section>
-<div class="divider"></div>
-
-<!-- NUMBERS -->
-<section class="nums-sec">
-  <div class="nums-bg"></div>
-  <div class="container">
-    <div class="nums-grid">
-      <div class="num-item reveal d1">
-        <div class="num-val">3<span class="ac">+</span></div>
-        <div class="num-lbl">Active Products</div>
-      </div>
-      <div class="num-item reveal d2">
-        <div class="num-val"><span class="ac">∞</span></div>
-        <div class="num-lbl">Ideas We Support</div>
-      </div>
-      <div class="num-item reveal d3">
-        <div class="num-val">100<span class="ac">%</span></div>
-        <div class="num-lbl">Commitment to Builders</div>
-      </div>
-      <div class="num-item reveal d4">
-        <div class="num-val">1<span class="ac">.</span></div>
-        <div class="num-lbl">Clear Mission</div>
-      </div>
-    </div>
-  </div>
-</section>
-<div class="divider"></div>
-
-<!-- PRODUCTS -->
-<section class="pr-sec" id="products">
-  <div class="container">
-    <div class="pr-head">
+    <div class="abt-split">
       <div>
-        <div class="stag reveal">Our Portfolio</div>
-        <h2 class="sec-h reveal">Products &amp;<br><span class="acc">Ventures.</span></h2>
-      </div>
-      <p class="pr-sub reveal">Each product in the Brivent ecosystem is built with intention — solving real problems for real builders.</p>
-    </div>
-    <div class="pr-grid">
-
-      <!-- WhatsAuto -->
-      <div class="pc feat reveal d1">
-        <div class="pc-img-wrap">
-          <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&q=80" alt="WhatsAuto">
-          <div class="pc-img-overlay"></div>
-          <div class="pc-logo-wrap">
-            <img class="pli" src="Whatsauto.png" alt="WhatsAuto" onerror="this.src='https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=80&h=80&fit=crop'">
-            <span class="pb2 live">Live</span>
-          </div>
+        <div class="sec-hd" data-reveal="up">
+          <span class="badge"><span class="bdot red"></span> Who We Are</span>
+          <h2 class="d-md mt-16">The ecosystem behind your next big idea.</h2>
+          <p class="lead mt-16">We don't just build products — we build the infrastructure that makes products possible. Brivent is a parent company creating ventures, platforms, and communities across Africa and beyond.</p>
         </div>
-        <div class="pb">
-          <h3>WhatsApp Sales System</h3>
-          <p>Turn WhatsApp into a smart sales machine. Auto-replies, product recommendations, and end-to-end order management.</p>
-          <div class="ptgs"><span class="ptg">SaaS</span><span class="ptg">Automation</span><span class="ptg">Sales</span></div>
-          <button class="plk" onclick="openModal('whatsauto')">Learn More <i class="fa-solid fa-arrow-right fa-xs"></i></button>
+        <ul class="checklist" data-reveal="up" data-d="2">
+          <li><i class="fa-solid fa-circle-check"></i> Turning ambitious ideas into live, scalable products</li>
+          <li><i class="fa-solid fa-circle-check"></i> Supporting founders with tools, networks, and mentorship</li>
+          <li><i class="fa-solid fa-circle-check"></i> Building communities where builders learn and grow</li>
+          <li><i class="fa-solid fa-circle-check"></i> Operating from Lagos with a global vision</li>
+        </ul>
+        <div class="mt-32" data-reveal="up" data-d="3">
+          <a href="about.html" class="btn btn-outline" data-mag>Learn Our Story <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
-
-      <!-- Kinnoc -->
-      <div class="pc reveal d2">
-        <div class="pc-img-wrap">
-          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80" alt="Kinnoc">
-          <div class="pc-img-overlay"></div>
-          <div class="pc-logo-wrap">
-            <img class="pli" src="kinnoc.png" alt="Kinnoc" onerror="this.src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=80&h=80&fit=crop'">
-            <span class="pb2 build">Building</span>
-          </div>
+      <div class="abt-img holo-shine scanlines hud-frame" data-reveal="left" data-d="2">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=80" alt="Brivent team collaborating" loading="lazy">
+        <div class="abt-chip">
+          <p>Established</p>
+          <span>2024 &mdash; Lagos</span>
         </div>
-        <div class="pb">
-          <h3>Kinnoc</h3>
-          <p>A community and connection platform designed to bridge people, ideas, and opportunities across ecosystems.</p>
-          <div class="ptgs"><span class="ptg">Platform</span><span class="ptg">Community</span></div>
-          <button class="plk" onclick="openModal('kinnoc')">Learn More <i class="fa-solid fa-arrow-right fa-xs"></i></button>
-        </div>
-      </div>
-
-      <!-- BIIT -->
-      <div class="pc reveal d3">
-        <div class="pc-img-wrap">
-          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80" alt="BIIT">
-          <div class="pc-img-overlay"></div>
-          <div class="pc-logo-wrap">
-            <img class="pli" src="BIIT.png" alt="BIIT" onerror="this.src='https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=80&h=80&fit=crop'">
-            <span class="pb2 beta">Beta</span>
-          </div>
-        </div>
-        <div class="pb">
-          <h3>BIIT</h3>
-          <p>Be Involved In Tech. A community helping young people step into technology through practical learning and mentorship.</p>
-          <div class="ptgs"><span class="ptg">Tech Community</span><span class="ptg">Builders</span></div>
-          <button class="plk" onclick="openModal('biit')">Learn More <i class="fa-solid fa-arrow-right fa-xs"></i></button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-<div class="divider"></div>
-
-<!-- VISION -->
-<section class="vi-sec">
-  <div class="vi-ambient"></div>
-  <div class="container">
-    <div class="vi-grid">
-      <div class="vi-l reveal-l">
-        <div class="stag">Our Direction</div>
-        <h2>Vision &amp;<br><span>Mission.</span></h2>
-        <p style="margin-top:20px">We are building towards a world where ambition is never left unsupported — where every talented founder, student, and builder has the structure, tools, and community they need to succeed.</p>
-      </div>
-      <div class="mis reveal-r d2">
-        <div class="mi">
-          <div class="mi-ico"><i class="fa-solid fa-earth-africa"></i></div>
-          <div class="mi-b"><h4>Our Vision</h4><p>Foundational infrastructure powering the next generation of scalable systems across Africa and beyond.</p></div>
-        </div>
-        <div class="mi">
-          <div class="mi-ico"><i class="fa-solid fa-crosshairs"></i></div>
-          <div class="mi-b"><h4>Our Mission</h4><p>Give structure to ambition by building products, supporting ideas, and creating ecosystems where builders thrive.</p></div>
-        </div>
-        <div class="mi">
-          <div class="mi-ico"><i class="fa-solid fa-gem"></i></div>
-          <div class="mi-b"><h4>Our Promise</h4><p>Intentionality, clarity, and unwavering commitment to forward growth — always.</p></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<div class="divider"></div>
-
-<!-- CONTACT -->
-<section class="ct-sec" id="contact">
-  <div class="container">
-    <div class="stag reveal">Get In Touch</div>
-    <h2 class="sec-h reveal">Let's Build<br><span class="acc">Together.</span></h2>
-    <div class="ct-grid">
-      <div class="ct-l reveal">
-        <h3>Have an idea worth building?</h3>
-        <p>Whether you're a founder looking for a strategic partner, a builder searching for an ecosystem, or a brand that needs direction — Brivent is ready to listen and act.</p>
-        <div class="ci"><div class="ci-i"><i class="fa-solid fa-envelope"></i></div><div class="ci-t"><span>Email</span><a href="mailto:hello@brivent.co">hello@brivent.co</a></div></div>
-        <div class="ci"><div class="ci-i"><i class="fa-solid fa-globe"></i></div><div class="ci-t"><span>Website</span><p>www.brivent.co</p></div></div>
-        <div class="ci"><div class="ci-i"><i class="fa-solid fa-location-dot"></i></div><div class="ci-t"><span>Location</span><p>Lagos, Nigeria · Remote Worldwide</p></div></div>
-        <div class="rb"><p><strong>Response time</strong>We typically respond within 24–48 hours. For urgent matters, reach out via email directly.</p></div>
-      </div>
-      <div class="cf reveal d2">
-        <h4>Send a Message</h4>
-        <form id="contactForm" action="https://formspree.io/f/mreozvne" method="POST">
-          <div class="frow">
-            <div class="fg"><label>First Name</label><input type="text" name="first_name" placeholder="John" required></div>
-            <div class="fg"><label>Last Name</label><input type="text" name="last_name" placeholder="Doe" required></div>
-          </div>
-          <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="you@example.com" required></div>
-          <div class="fg"><label>Topic</label>
-            <select name="topic" required>
-              <option value="">Select a topic</option>
-              <option value="Product Inquiry">Product Inquiry</option>
-              <option value="Partnership / Collaboration">Partnership / Collaboration</option>
-              <option value="Startup Support">Startup Support</option>
-              <option value="Community (BIIT / Kinnoc)">Community (BIIT / Kinnoc)</option>
-              <option value="General Question">General Question</option>
-            </select>
-          </div>
-          <div class="fg"><label>Message</label><textarea name="message" placeholder="Tell us about your idea, project, or question..." required></textarea></div>
-          <input type="text" name="_gotcha" style="display:none">
-          <button type="submit" class="sb" id="formSubmitBtn">Send Message <i class="fa-solid fa-paper-plane fa-sm"></i></button>
-          <div id="formStatus" style="margin-top:12px;font-size:.8rem;text-align:center;"></div>
-        </form>
+        <div class="abt-pin"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
       </div>
     </div>
   </div>
 </section>
 
-<footer>
+<!-- ═══ SERVICES ═══ -->
+<section class="sec" style="padding-top:0">
   <div class="container">
-    <div class="ft">
-      <div class="fb">
-        <a href="#home" class="n-logo"><img src="brivent.png" alt="Brivent" style="height:44px;width:auto;"></a>
-        <p>Giving structure to ambition — building products, supporting ideas, and bridging potential with execution.</p>
-      </div>
-      <div class="fc"><h5>Company</h5><ul><li><a href="#home">Home</a></li><li><a href="#about">About Us</a></li><li><a href="#services">What We Do</a></li></ul></div>
-      <div class="fc"><h5>Products</h5><ul><li><a href="#products">WA Sales System</a></li><li><a href="#products">Kinnoc</a></li><li><a href="#products">BIIT</a></li></ul></div>
-      <div class="fc"><h5>Connect</h5><ul><li><a href="mailto:hello@brivent.co">hello@brivent.co</a></li><li><a href="#">www.brivent.co</a></li></ul></div>
+    <div class="sec-hd ctr" data-reveal="up">
+      <span class="badge"><span class="bdot"></span> What We Do</span>
+      <h2 class="d-md mt-16">Three pillars. <span class="text-blue">One mission.</span></h2>
+      <p class="lead mt-16">Everything we build at Brivent falls into three core areas — the pillars that hold up the infrastructure of ambition.</p>
     </div>
-    <div class="ftb">
-      <p>© 2026 Brivent. Built with <span>♥</span> for ambitious builders.</p>
-      <div class="soc">
-        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+    <div class="svc-strip" data-reveal="up" data-d="2">
+      <div class="svc-tile">
+        <span class="svc-tile__n">01</span>
+        <div class="card-ico mb-16"><i class="fa-solid fa-layer-group"></i></div>
+        <h3>Product Development</h3>
+        <p>We build digital products from concept to deployment — SaaS tools, automation platforms, and scalable web applications.</p>
+        <a href="services.html" class="svc-arr" aria-label="Product Development"><i class="fa-solid fa-arrow-right"></i></a>
       </div>
+      <div class="svc-tile">
+        <span class="svc-tile__n">02</span>
+        <div class="card-ico red mb-16"><i class="fa-solid fa-people-group"></i></div>
+        <h3>Community Building</h3>
+        <p>We create spaces where founders, students, and builders connect, collaborate, and grow in ecosystems engineered for impact.</p>
+        <a href="services.html" class="svc-arr" aria-label="Community Building"><i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="svc-tile">
+        <span class="svc-tile__n">03</span>
+        <div class="card-ico green mb-16"><i class="fa-solid fa-rocket"></i></div>
+        <h3>Startup Support</h3>
+        <p>We provide early-stage ventures with the infrastructure they need — tools, mentorship, networks, and the structure to scale.</p>
+        <a href="services.html" class="svc-arr" aria-label="Startup Support"><i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRODUCTS ═══ -->
+<section class="sec">
+  <div class="container">
+    <div class="sec-hd" data-reveal="up">
+      <span class="badge"><span class="bdot green"></span> Our Ventures</span>
+      <h2 class="d-md mt-16">Products we're building.</h2>
+      <p class="lead mt-16">Active ventures across automation, community, and tech education — each one solving a real problem.</p>
+    </div>
+    <div class="prod-grid">
+      <div class="p-card holo-shine" data-reveal="up" data-d="1" data-tilt>
+        <div class="p-card__inner">
+          <div class="p-card__img scanlines hud-frame">
+            <img src="https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=800&q=80" alt="WhatsAuto" loading="lazy">
+          </div>
+          <div class="p-card__body">
+            <div class="tags mb-16">
+              <span class="tag tag-green"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> Live</span>
+              <span class="tag tag-chalk">SaaS</span><span class="tag tag-blue">Automation</span>
+            </div>
+            <h3 class="d-xs mb-12">WhatsAuto</h3>
+            <p class="small" style="color:var(--white-60);line-height:1.7">A powerful WhatsApp sales system that automates replies, product recommendations, and order management for businesses of every size.</p>
+            <a href="products.html" class="btn btn-glass btn-sm mt-20" style="width:100%;justify-content:center">View Product <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="p-card holo-shine" data-reveal="up" data-d="2" data-tilt>
+        <div class="p-card__inner">
+          <div class="p-card__img scanlines hud-frame">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80" alt="Kinnoc" loading="lazy">
+          </div>
+          <div class="p-card__body">
+            <div class="tags mb-16">
+              <span class="tag tag-blue"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> Building</span>
+              <span class="tag tag-chalk">Platform</span><span class="tag tag-chalk">Community</span>
+            </div>
+            <h3 class="d-xs mb-12">Kinnoc</h3>
+            <p class="small" style="color:var(--white-60);line-height:1.7">A community platform designed to connect people, ideas, and opportunities. Built for founders, students, and ambitious builders.</p>
+            <a href="products.html" class="btn btn-glass btn-sm mt-20" style="width:100%;justify-content:center">View Product <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="p-card holo-shine" data-reveal="up" data-d="3" data-tilt>
+        <div class="p-card__inner">
+          <div class="p-card__img scanlines hud-frame">
+            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" alt="BIIT" loading="lazy">
+          </div>
+          <div class="p-card__body">
+            <div class="tags mb-16">
+              <span class="tag tag-amber"><i class="fa-solid fa-circle" style="font-size:.4rem"></i> Beta</span>
+              <span class="tag tag-chalk">Community</span><span class="tag tag-chalk">EdTech</span>
+            </div>
+            <h3 class="d-xs mb-12">BIIT</h3>
+            <p class="small" style="color:var(--white-60);line-height:1.7">Be Involved In Tech — helping young Africans break into the industry through practical projects, mentorship, and real experience.</p>
+            <a href="products.html" class="btn btn-glass btn-sm mt-20" style="width:100%;justify-content:center">View Product <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-40" data-reveal="up">
+      <a href="products.html" class="btn btn-outline btn-lg" data-mag>See All Products <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NUMBERS ═══ -->
+<section class="sec" style="padding-top:0">
+  <div class="container">
+    <div class="nums-row">
+      <div class="stat-card" data-reveal="up" data-d="1"><div class="stat-val" data-count="3" data-suffix="+">3+</div><div class="stat-lbl">Active Products</div></div>
+      <div class="stat-card" data-reveal="up" data-d="2"><div class="stat-val">&infin;</div><div class="stat-lbl">Ideas Fueled</div></div>
+      <div class="stat-card" data-reveal="up" data-d="3"><div class="stat-val" data-count="100" data-suffix="%">100%</div><div class="stat-lbl">Commitment</div></div>
+      <div class="stat-card" data-reveal="up" data-d="4"><div class="stat-val">1</div><div class="stat-lbl">Clear Mission</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="sec">
+  <div class="container">
+    <div class="cta-box" data-reveal="scale">
+      <div class="orb orb-blue" style="width:500px;height:500px;top:-60%;left:50%;transform:translateX(-50%);opacity:.3" aria-hidden="true"></div>
+      <span class="badge" style="margin-bottom:24px"><span class="bdot"></span> Start Building</span>
+      <h2 class="d-md" style="margin-bottom:20px">Ready to build the <span class="text-blue">future</span>?</h2>
+      <p class="lead" style="max-width:500px;margin:0 auto">Whether you're a founder with a vision, a community builder, or a startup looking for infrastructure — Brivent is built for you.</p>
+      <div class="cta-btns">
+        <a href="contact.html" class="btn btn-primary btn-xl" data-mag>Get in Touch <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="products.html" class="btn btn-glass btn-xl" data-mag>Explore Products</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="brivent.png" alt="Brivent">
+        <p>Building the infrastructure that powers the next generation of ventures. From Lagos to the world.</p>
+        <div class="footer__socials">
+          <a href="#" class="soc-btn" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="soc-btn" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" class="soc-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="soc-btn" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h6>Company</h6>
+        <ul class="footer__links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h6>Products</h6>
+        <ul class="footer__links">
+          <li><a href="products.html">WhatsAuto</a></li>
+          <li><a href="products.html">Kinnoc</a></li>
+          <li><a href="products.html">BIIT</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h6>Connect</h6>
+        <ul class="footer__links">
+          <li><a href="mailto:hello@brivent.co"><i class="fa-regular fa-envelope" style="width:14px;color:var(--persian)"></i>&nbsp; hello@brivent.co</a></li>
+          <li><a href="#"><i class="fa-solid fa-globe" style="width:14px;color:var(--persian)"></i>&nbsp; brivent.co</a></li>
+          <li><a href="#"><i class="fa-solid fa-location-dot" style="width:14px;color:var(--persian)"></i>&nbsp; Lagos, Nigeria</a></li>
+          <li><a href="#"><i class="fa-solid fa-wifi" style="width:14px;color:var(--persian)"></i>&nbsp; Remote Worldwide</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <p>&copy; 2024 Brivent. All rights reserved. Built with ambition.</p>
+      <p>Lagos, Nigeria &middot; Remote Worldwide</p>
     </div>
   </div>
 </footer>
 
-<!-- ── PRODUCT MODALS ── -->
-
-<!-- WhatsAuto Modal -->
-<div class="modal-overlay" id="modal-whatsauto" onclick="closeModalOutside(event,'modal-whatsauto')">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-whatsauto')"><i class="fa-solid fa-xmark"></i></button>
-    <div class="modal-hero">
-      <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=700&q=80" alt="WhatsApp Sales System">
-      <div class="modal-hero-content">
-        <div>
-          <div class="modal-hero-title">WhatsApp Sales &amp; Ordering System</div>
-        </div>
-        <span class="pb2 live">Live</span>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-tag">Product Overview</div>
-      <div class="modal-section">
-        <p>We help businesses turn WhatsApp into a smart sales system. Customers can chat, get recommendations, and place orders automatically — while the business receives everything in a clean, organized way.</p>
-      </div>
-      <div class="modal-section">
-        <h4><i class="fa-solid fa-bolt"></i> What It Does</h4>
-        <ul class="modal-features">
-          <li>Auto-replies to customer messages instantly</li>
-          <li>Recommends products and meals based on customer interest</li>
-          <li>Handles orders from start to finish, seamlessly</li>
-          <li>Reduces missed messages and lost sales opportunities</li>
-          <li>Improves overall customer experience and satisfaction</li>
-        </ul>
-      </div>
-      <div class="modal-section">
-        <h4><i class="fa-solid fa-bullseye"></i> Who It's For</h4>
-        <div class="modal-who">Restaurants, vendors, and businesses that receive orders on WhatsApp and want to convert more conversations into sales with less manual effort.</div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-value"><p>💥 Turn conversations into sales.</p></div>
-      </div>
-      <div class="modal-cta">
-        <a href="#contact" class="bp" onclick="closeModal('modal-whatsauto')">Get in Touch <i class="fa-solid fa-arrow-right fa-sm"></i></a>
-        <button class="bg" onclick="closeModal('modal-whatsauto')">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Kinnoc Modal -->
-<div class="modal-overlay" id="modal-kinnoc" onclick="closeModalOutside(event,'modal-kinnoc')">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-kinnoc')"><i class="fa-solid fa-xmark"></i></button>
-    <div class="modal-hero">
-      <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&q=80" alt="Kinnoc">
-      <div class="modal-hero-content">
-        <div><div class="modal-hero-title">Kinnoc</div></div>
-        <span class="pb2 build">Building</span>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-tag">Product Overview</div>
-      <div class="modal-section">
-        <p>Kinnoc is a community and connection platform designed to bridge people, ideas, and opportunities — making meaningful connections effortless across ecosystems.</p>
-      </div>
-      <div class="modal-section">
-        <h4><i class="fa-solid fa-bolt"></i> What It Does</h4>
-        <ul class="modal-features">
-          <li>Connects people across communities and ecosystems</li>
-          <li>Surfaces relevant opportunities and collaborations</li>
-          <li>Enables builders and founders to network authentically</li>
-          <li>Bridges the gap between talent and opportunity</li>
-        </ul>
-      </div>
-      <div class="modal-section">
-        <h4><i class="fa-solid fa-bullseye"></i> Who It's For</h4>
-        <div class="modal-who">Founders, students, and builders looking to connect with like-minded people and find real opportunities in their space.</div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-value"><p>🌐 Where ambition meets community.</p></div>
-      </div>
-      <div class="modal-cta">
-        <a href="#contact" class="bp" onclick="closeModal('modal-kinnoc')">Stay Updated <i class="fa-solid fa-arrow-right fa-sm"></i></a>
-        <button class="bg" onclick="closeModal('modal-kinnoc')">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- BIIT Modal -->
-<div class="modal-overlay" id="modal-biit" onclick="closeModalOutside(event,'modal-biit')">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-biit')"><i class="fa-solid fa-xmark"></i></button>
-    <div class="modal-hero">
-      <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=700&q=80" alt="BIIT">
-      <div class="modal-hero-content">
-        <div><div class="modal-hero-title">BIIT — Be Involved In Tech</div></div>
-        <span class="pb2 beta">Beta</span>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-tag">Community Initiative</div>
-      <div class="modal-section">
-        <p>BIIT is a community-driven initiative helping young people step into technology through practical learning, mentorship, and real-world exposure. We create opportunities for students and beginners to discover tech, build skills, and connect with a growing ecosystem of builders.</p>
-      </div>
-      <div class="modal-section">
-        <h4><i class="fa-solid fa-bolt"></i> What We Offer</h4>
-        <ul class="modal-features">
-          <li>Practical, hands-on learning experiences in tech</li>
-          <li>Mentorship from real builders and practitioners</li>
-          <li>Real-world exposure and project opportunities</li>
-          <li>A growing network of motivated builders and peers</li>
-          <li>Access to the broader Brivent ecosystem of products</li>
-        </ul>
-      </div>
-      <div class="modal-section">
-        <h4><i class="fa-solid fa-bullseye"></i> Who It's For</h4>
-        <div class="modal-who">Students, beginners, and young people who want to discover technology, build real skills, and grow through an active and supportive community.</div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-value"><p>🚀 A tech community helping young people learn, build, and grow through real opportunities.</p></div>
-      </div>
-      <div class="modal-cta">
-        <a href="#contact" class="bp" onclick="closeModal('modal-biit')">Join the Community <i class="fa-solid fa-arrow-right fa-sm"></i></a>
-        <button class="bg" onclick="closeModal('modal-biit')">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-/* ─── CUSTOM CURSOR ─── */
-const cur=document.getElementById('cur'),curR=document.getElementById('curR');
-let mx=0,my=0,rx=0,ry=0,raf;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
-function animCur(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(animCur);}animCur();
-const hoverEls=document.querySelectorAll('a,button,.pc,.val,.sv-item,.mi,.ci');
-hoverEls.forEach(el=>{
-  el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
-  el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
-});
-
-/* ─── PARTICLE CANVAS ─── */
-const cv=document.getElementById('pc'),cx=cv.getContext('2d');
-let W,H,pts=[];
-function rsz(){W=cv.width=innerWidth;H=cv.height=innerHeight;}rsz();
-window.addEventListener('resize',rsz);
-class P{
-  constructor(){this.reset();}
-  reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.s=Math.random()*1.4+.3;this.vx=(Math.random()-.5)*.32;this.vy=(Math.random()-.5)*.32;this.base=Math.random()*.38+.06;this.c=Math.random()>.75?'255,17,11':'21,43,249';this.ph=Math.random()*Math.PI*2;this.ps=Math.random()*.014+.003;}
-  update(){this.x+=this.vx;this.y+=this.vy;this.ph+=this.ps;this.a=this.base*(0.5+0.5*Math.sin(this.ph));if(this.x<-2||this.x>W+2||this.y<-2||this.y>H+2)this.reset();}
-  draw(){cx.globalAlpha=this.a;cx.fillStyle=`rgb(${this.c})`;cx.beginPath();cx.arc(this.x,this.y,this.s,0,Math.PI*2);cx.fill();}
-}
-for(let i=0;i<120;i++)pts.push(new P());
-function drawLines(){
-  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
-    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-    if(d<88){cx.globalAlpha=(1-d/88)*.055;cx.strokeStyle='#152bf9';cx.lineWidth=.35;cx.beginPath();cx.moveTo(pts[i].x,pts[i].y);cx.lineTo(pts[j].x,pts[j].y);cx.stroke();}
-  }
-}
-(function loop(){cx.clearRect(0,0,W,H);drawLines();pts.forEach(p=>{p.update();p.draw();});cx.globalAlpha=1;requestAnimationFrame(loop);})();
-
-/* ─── NAV SCROLL ─── */
-const navEl=document.getElementById('nav');
-window.addEventListener('scroll',()=>navEl.classList.toggle('scrolled',scrollY>60),{passive:true});
-
-/* ─── REVEAL ON SCROLL ─── */
-const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');}}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>obs.observe(el));
-
-/* ─── MOBILE NAV ─── */
-const mob=document.getElementById('mob'),ham=document.getElementById('ham');
-function toggleMob(){const o=mob.classList.toggle('open');ham.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';}
-function closeMob(){mob.classList.remove('open');ham.classList.remove('open');document.body.style.overflow='';}
-mob.addEventListener('click',e=>{if(e.target===mob)closeMob();});
-
-/* ─── PRODUCT MODALS ─── */
-function openModal(id){
-  const m=document.getElementById('modal-'+id);
-  if(!m)return;
-  m.classList.add('open');
-  document.body.style.overflow='hidden';
-  document.body.classList.add('hovering');
-}
-function closeModal(id){
-  const m=document.getElementById('modal-'+id);
-  if(!m)return;
-  m.classList.remove('open');
-  document.body.style.overflow='';
-}
-function closeModalOutside(e,id){if(e.target===e.currentTarget)closeModal(id);}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));document.body.style.overflow='';}});
-
-/* ─── FORM ─── */
-const contactForm=document.getElementById('contactForm');
-const submitBtn=document.getElementById('formSubmitBtn');
-const formStatus=document.getElementById('formStatus');
-if(contactForm){
-  contactForm.addEventListener('submit',async function(e){
-    e.preventDefault();
-    submitBtn.disabled=true;
-    submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
-    formStatus.innerHTML='';
-    const fd=new FormData(contactForm);
-    try{
-      const res=await fetch(contactForm.action,{method:'POST',body:fd,headers:{Accept:'application/json'}});
-      if(res.ok){
-        formStatus.innerHTML='<span style="color:#22c55e;">✓ Message sent! We\'ll be in touch soon.</span>';
-        submitBtn.innerHTML='<i class="fa-solid fa-circle-check"></i> Sent!';
-        contactForm.reset();
-        setTimeout(()=>{submitBtn.innerHTML='Send Message <i class="fa-solid fa-paper-plane fa-sm"></i>';submitBtn.disabled=false;formStatus.innerHTML='';},5000);
-      }else{
-        const d=await res.json();
-        formStatus.innerHTML='<span style="color:#ff6b6b;">✗ '+(d.error||'Something went wrong. Please try again.')+'</span>';
-        submitBtn.disabled=false;submitBtn.innerHTML='Send Message <i class="fa-solid fa-paper-plane fa-sm"></i>';
-      }
-    }catch(err){
-      formStatus.innerHTML='<span style="color:#ff6b6b;">✗ Network error. Please check your connection.</span>';
-      submitBtn.disabled=false;submitBtn.innerHTML='Send Message <i class="fa-solid fa-paper-plane fa-sm"></i>';
-    }
-  });
-}
-
-/* ─── TOUCH: HIDE CURSOR ─── */
-if('ontouchstart' in window){cur.style.display='none';curR.style.display='none';document.body.style.cursor='auto';}
-</script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>
